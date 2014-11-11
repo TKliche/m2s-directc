@@ -3,7 +3,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <sys/ioctl.h>
-#include "ioctl-jtag.h"
+#include "jtag.h"
 
 int main(int argc, char *argv[])
 {

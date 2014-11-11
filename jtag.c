@@ -17,7 +17,7 @@
 #include <linux/ioctl.h>
 #include <linux/delay.h>
 
-#include "ioctl-jtag.h"
+#include "jtag.h"
 
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Roman Okhrimenko <mrromanjoe@gmail.com>");

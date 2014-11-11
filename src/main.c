@@ -2,7 +2,8 @@
 #include <stdio.h>
 #include <sys/stat.h>
 #include <unistd.h>
-#include "gpio.h"
+#include <string.h>
+#include <fcntl.h>
 #include "dpuser.h"
 #include "dpalg.h"
 

@@ -17,6 +17,7 @@
 #include <sys/ioctl.h>
 #include <fcntl.h>
 #include <time.h>
+#include <string.h>
 #include "dpuser.h"
 #include "dpalg.h"
 #include "dputil.h"
@@ -26,8 +27,8 @@
  * Include files needed to support hardware JTAG interface operations.
  * 
 */
-#include "gpio.h"
-#include "ioctl-jtag.h"
+//#include "gpio.h"
+#include "jtag.h"
 /* This variable is used to select external programming vs IAP programming */
 DPUCHAR hardware_interface = GPIO_SEL;
 DPUCHAR enable_mss_support = FALSE;

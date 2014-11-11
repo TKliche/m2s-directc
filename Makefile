@@ -1,38 +1,34 @@
 #
-# 'make depend' uses makedepend to automatically generate dependencies 
+# 'make depend' uses makedepend to automatically generate dependencies
 #               (dependencies are added to end of Makefile)
 # 'make'        build executable file 'mycc'
 # 'make clean'  removes all .o and executable files
 #
 TOOLCHAIN_PATH = /home/romanjoe/dev/linux-cortexm-1.12.0/tools/arm-2010q1/bin
 CC_PREFIX = arm-uclinuxeabi-
-
 # define the C compiler to use
 CC = $(TOOLCHAIN_PATH)/$(CC_PREFIX)gcc
-
 #define module targets
-MODULE = ioctl-jtag
-obj-m   := $(MODULE).o
-
-# define user space application targets
-APP1 = m2s-gpio
-APP2 = us
-
-all:	modules m2s-gpio us
-clean:	clean_modules clean_apps
-
+MODULE 		= jtag
+obj-m   	:= $(MODULE).o
 # define any compile-time flags
-CFLAGS = -mcpu=cortex-m3 -mthumb -std=c99 -v -g3 -Wall -O3
-
+CFLAGS = -mcpu=cortex-m3 -mthumb -std=c99 -g3 -Wall -O3
 # define linker flags
 LDLAGS = -mcpu=cortex-m3 -mthumb
 # Path to the kernel modules directory in context of whichhh
 # these loadable modules are built
 KERNELDIR	= $(INSTALL_ROOT)/linux
+# define user space application targets
+MAIN-APP	= m2s-gpio
+TEST-CODE 	= us
+
+all:	modules $(MAIN-APP) $(TEST-CODE)
+clean:	clean_modules clean_apps
 
 # define any directories containing header files other than /usr/include
 #
-INCLUDES	= 	-I./ \
+INCLUDES	=	-I./ \
+				-I./inc \
 				-I/home/romanjoe/dev/linux-cortexm-1.12.0/tools/arm-2010q1/arm-uclinuxeabi/include \
 				-I/home/romanjoe/dev/linux-cortexm-1.12.0/tools/arm-2010q1/arm-uclinuxeabi/libc/usr/include \
 				-I/home/romanjoe/dev/linux-cortexm-1.12.0/tools/arm-2010q1/lib/gcc/arm-uclinuxeabi/4.4.1/include \
@@ -45,22 +41,21 @@ INCLUDES	= 	-I./ \
 
 # define the C source files
 # user space application source files
-MAIN-APP-SRCS =  main.c 		\
-		gpio.c 		\
-		dpalg.c		\
-		dpcom.c 	\
-		dpuser.c 	\
-		dputil.c 	\
-		dpchain.c 	\
-		dpjtag.c 	\
-		dpG4alg.c	\
-		dpG3alg.c	\
-		dpcore.c	\
-		dpfrom.c	\
-		dpnvm.c		\
-		dpsecurity.c
+MAIN-APP-SRCS =	src/main.c 		\
+		src/dpalg.c		\
+		src/dpcom.c 	\
+		src/dpuser.c 	\
+		src/dputil.c 	\
+		src/dpchain.c 	\
+		src/dpjtag.c 	\
+		src/dpG4alg.c	\
+		src/dpG3alg.c	\
+		src/dpcore.c	\
+		src/dpfrom.c	\
+		src/dpnvm.c		\
+		src/dpsecurity.c
 
-TEST-APP-SRCS = us.c
+TEST-CODE-SRCS = test-code/us.c
 
 #define the C object files
 #
@@ -72,7 +67,7 @@ TEST-APP-SRCS = us.c
 #
 MAIN-APP-OBJS = $(MAIN-APP-SRCS:.c=.o)
 
-TEST-APP-OBJS = $(TEST-APP-SRCS:.c=.o)
+TEST-CODE-OBJS = $(TEST-CODE-SRCS:.c=.o)
 #
 # The following part of the makefile is generic; it can be used to
 # build any executable just by changing the definitions above and by
@@ -81,16 +76,15 @@ TEST-APP-OBJS = $(TEST-APP-SRCS:.c=.o)
 
 .PHONY: depend clean
 
-m2s-gpio: 	$(MAIN-APP-OBJS)
-			$(CC) $(CFLAGS) $(INCLUDES) -o $(APP1) $(MAIN-APP-OBJS) $(LDLAGS) $(LIBS)
+$(MAIN-APP): 	$(MAIN-APP-OBJS)
+				$(CC) $(CFLAGS) $(INCLUDES) -o $(MAIN-APP) $(MAIN-APP-OBJS) $(LDLAGS) $(LIBS)
 
-us: 		$(TEST-APP-OBJ)
-			$(CC) $(CFLAGS) $(INCLUDES) -o $(APP2) $(TEST-APP-OBJ) $(LDLAGS) $(LIBS)
+$(TEST-CODE):	$(TEST-CODE-OBJS)
+				$(CC) $(CFLAGS) $(INCLUDES) -o $(TEST-CODE) $(TEST-CODE-OBJS) $(LDLAGS) $(LIBS)
 
 modules:
 		echo "make modules CFLAGS="" LDFLAGS="""
 		make -C $(KERNELDIR) M=`pwd` modules CFLAGS="" LDFLAGS=""
-
 
 # this is a suffix replacement rule for building .o's from .c's
 # it uses automatic variables $<: the name of the prerequisite of
@@ -101,14 +95,14 @@ modules:
 
 # Clean-up after user space progs
 clean_apps:
-		rm -rf *.o *~ $(APP1) $(APP2) *.gdb
+		rm -rf *.o *~ $(MAIN-APP) $(TEST-CODE) *.gdb
 
 # Clean-up after modules
 clean_modules:
 		make -C $(KERNELDIR) M=`pwd` clean
 		rm -f modules.order
 
-depend: $(MAIN-APP-OBJ)
-		make depend $(INCLUDES) $^
+#depend: $(MAIN-APP-OBJ)
+#		make depend $(INCLUDES) $^
 
 # DO NOT DELETE THIS LINE -- make depend needs it
