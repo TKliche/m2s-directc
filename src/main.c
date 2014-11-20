@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
 	char * dat_file_action = argv[2];
 
 //	unsigned int jtag_pins[5] = {sysfsTDI,
-//								sysfsTDO,
+//								sysfsTDO,y
 //								sysfsTCK,
 //								sysfsTMS,
 //								TERMINATION
@@ -34,7 +34,6 @@ int main(int argc, char *argv[])
 				"[ERROR] Please, define proper action value -PROGRAM\n-ERASE\n-IDCODE\n-DEVINFO");
 		exit(1);
 	}
-
 	dat_file = fopen(dat_file_name, "r");
 
 	struct stat results;
@@ -50,13 +49,8 @@ int main(int argc, char *argv[])
 	}
 
 	jtag_fd = open("/dev/jtag", O_RDWR);
-//	tdo_fd = open("/sys/class/jtag_ports/jtag/tdo", O_RDONLY);
-//	write_byte_fd = open("/sys/class/jtag_ports/jtag/write_byte", O_WRONLY);
-//	if(!sysfs_gpio_port_export(jtag_pins, EXPORT))
-//	{
-//		if(!sysfs_gpio_jtag_setdirections(jtag_pins))
 	dp_top();
-//	}
+
 	fprintf(stdout, "\nReturned error code = %d \n", error_code);
 	free(image_buffer);
 

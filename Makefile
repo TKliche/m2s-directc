@@ -1,4 +1,4 @@
-#
+
 # 'make depend' uses makedepend to automatically generate dependencies
 #               (dependencies are added to end of Makefile)
 # 'make'        build executable file 'mycc'
@@ -12,7 +12,7 @@ CC = $(TOOLCHAIN_PATH)/$(CC_PREFIX)gcc
 MODULE 		= jtag
 obj-m   	:= $(MODULE).o
 # define any compile-time flags
-CFLAGS = -mcpu=cortex-m3 -mthumb -std=c99 -g3 -Wall -O3
+CFLAGS = -mcpu=cortex-m3 -mthumb -std=c99 -Os -Wall -g3
 # define linker flags
 LDLAGS = -mcpu=cortex-m3 -mthumb
 # Path to the kernel modules directory in context of whichhh
