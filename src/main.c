@@ -8,7 +8,6 @@
 #include "dpalg.h"
 
 int jtag_fd = -1;
-//int write_byte_fd = -1;
 
 int main(int argc, char *argv[])
 {
@@ -16,13 +15,6 @@ int main(int argc, char *argv[])
 	size_t dat_file_size = 0;
 	char * dat_file_name = argv[1];
 	char * dat_file_action = argv[2];
-
-//	unsigned int jtag_pins[5] = {sysfsTDI,
-//								sysfsTDO,y
-//								sysfsTCK,
-//								sysfsTMS,
-//								TERMINATION
-//								};
 
 	if(strcmp(dat_file_action, "-PROGRAM") == 0) Action_code = 5;
 	else if(strcmp(dat_file_action, "-ERASE") == 0) Action_code = 3;

@@ -154,9 +154,13 @@ void jtag_write_byte(struct file * fipl, unsigned long arg)
 void jtag_read_tdo(struct file * filp, int * arg)
 {
     if ( HW_REG(tdo) == 1 )
+	{
         *arg = 1;
+	}
     else
+    {
         *arg = 0;
+    }
 }
 
 void tck_switch(struct file * filp)
@@ -173,7 +177,7 @@ void tck_switch(struct file * filp)
 
 int jtag_ioctl(struct inode * inode, struct file * filp, unsigned int cmd, unsigned long arg)
 {
-    static int * tdo;
+    static int tdo;
     int * temp;
 
     switch (cmd)
@@ -186,8 +190,8 @@ int jtag_ioctl(struct inode * inode, struct file * filp, unsigned int cmd, unsig
         break;
     case JTAG_READ_TDO:
         temp = (int *)arg;
-        jtag_read_tdo(filp, tdo);
-        put_user(*tdo, temp);
+        jtag_read_tdo(filp, &tdo);
+        put_user(tdo, temp);
         break;
     default:
         return -ENOTTY;

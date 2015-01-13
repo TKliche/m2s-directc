@@ -27,7 +27,6 @@
  * Include files needed to support hardware JTAG interface operations.
  *
 */
-//#include "gpio.h"
 #include "jtag.h"
 /* This variable is used to select external programming vs IAP programming */
 DPUCHAR hardware_interface = GPIO_SEL;
@@ -43,7 +42,6 @@ DPUCHAR enable_mss_support = FALSE;
 
 static DPUCHAR jtag_port_reg;
 extern int jtag_fd;
-//extern int write_yte_fd;
 /*
  * User attention:
  * Module: jtag_inp
@@ -55,28 +53,14 @@ extern int jtag_fd;
 */
 DPUCHAR jtag_inp(void)
 {
-    int * tdo;
-    int i;
-    tdo = &i;
-//	DPUCHAR tdo[1] = {-1};
+    int tdo = -1;
     DPUCHAR ret = 0x80;
-//	int tdo_fd = -1;
-    ioctl(jtag_fd, JTAG_READ_TDO, tdo);
-//	char tdopin_str[35];
-    /* User Specific Code */
-//	sprintf(tdopin_str, "/sys/class/gpio/gpio%d/value", sysfsTDO);
-//	jtag_fd = open(tdopin_str, O_RDONLY);
-//	read(jtag_fd, tdo, 1);
 
-    if(i == 1)
-    //if(* tdo == 1)
+    ioctl(jtag_fd, JTAG_READ_TDO, &tdo);
+    if(tdo == 1)
         ret = 0x80;
     else
         ret = 0;
-
-    /* For Parallel global_buf1er board, the logic is reversed. */
-//	if ((tdo&TDO) == 0)
-//        ret = 0;
    return ret;
 }
 /*
@@ -91,17 +75,6 @@ void jtag_outp(DPUCHAR outdata)
 {
     /* User Specific Code */
     ioctl(jtag_fd, JTAG_WRITE_BYTE, (int)outdata);
-
-//	sysfs_gpio_port_value(outdata);
-//	int bytes = 0;
-//	char tmp_buf[2] = {};
-//
-//	sprintf(tmp_buf, "%d", outdata);
-//
-//	bytes = write(write_byte_fd, tmp_buf, sizeof(tmp_buf));
-
-//	fprintf(stdout, "%d bytes transfered\n", bytes);
-
 }
 
 /*
